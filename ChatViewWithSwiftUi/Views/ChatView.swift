@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct ChatView: View {
+    
+    let chat: Chat
 
     @State private var textFieldText: String = ""
     @FocusState private var textFieldFocused: Bool
+    @Environment(\.dismiss) private var dismiss
 
     @ObservedObject var vm: ChatViewModel = ChatViewModel()
 
@@ -28,16 +31,16 @@ struct ChatView: View {
     }
 }
 
-#Preview {
-    ChatView()
-}
+//#Preview {
+//    ChatView()
+//}
 
 extension ChatView {
     private var messageArea: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 0) {
-                    ForEach(vm.messages) { message in
+                    ForEach(chat.messages) { message in
                         MessageRow(message: message)
                     }
                 }
@@ -87,7 +90,13 @@ extension ChatView {
 
     private var navigationErea: some View {
         HStack {
-            Image(systemName: "chevron.backward").font(.title2)
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.backward").font(.title2)
+                    .foregroundColor(.primary)
+            }
+
             Text("Title").font(.title2.bold())
             Spacer()
             HStack(spacing: 16) {

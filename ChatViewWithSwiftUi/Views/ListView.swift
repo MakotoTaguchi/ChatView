@@ -8,15 +8,20 @@
 import SwiftUI
 
 struct ListView: View {
+    
+    @ObservedObject var vm: ChatViewModel = ChatViewModel()
+    
     var body: some View {
-        VStack {
-            // Header
-            header
+        NavigationView {
+            VStack {
+                // Header
+                header
 
-            // List
-            list
-        }
+                // List
+                list
+            }
             .padding(.horizontal)
+        }
     }
 }
 
@@ -44,14 +49,20 @@ extension ListView {
     private var list: some View {
         ScrollView {
             VStack {
-                ForEach(0..<5) { _ in
-                    listRow
+                ForEach(vm.chatData) { chat in
+                    NavigationLink {
+                        ChatView(chat: chat)
+                            .toolbar(.hidden)
+                    } label: {
+                        listRow(chat: chat)
+                    }
                 }
             }
         }
     }
 
-    private var listRow: some View {
+    //    private var listRow: some View {
+    private func listRow(chat: Chat) -> some View {
         HStack {
             Image("user01")
                 .resizable()
@@ -59,12 +70,14 @@ extension ListView {
                 .clipShape(Circle())
             VStack(alignment: .leading) {
                 Text("タイトル")
-                Text("最新のメッセージ")
+                    .foregroundColor(.primary)
+                Text(chat.recentMessageText)
                     .font(.footnote)
+                    .lineLimit(1)
                     .foregroundColor(Color(uiColor: .secondaryLabel))
             }
             Spacer()
-            Text("12/31")
+            Text(chat.recentMessageDataString)
                 .font(.caption)
                 .foregroundColor(Color(uiColor: .secondaryLabel))
         }
