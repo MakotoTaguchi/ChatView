@@ -1,0 +1,2 @@
+# ChatView
+Swiftでメッセージアプリの作成
